@@ -21,12 +21,36 @@
 '''Some utilities for command line interfaces !'''
 
 from .log import enable_default_logging, get_logger
+from .flags import ArgParser
 
 import plac
+
+args = plac.annotations
 
 def call(main):
     '''Enable logging and start up a main method.'''
     enable_default_logging()
-    plac.call(main)
+    f = get_flags()
+    if f:
+        main(f.parse_args())
+    else:
+        plac.call(main)
 
-args = plac.annotations
+
+_FLAGS = None
+
+def get_flags():
+    '''Enable arguments through the Python argparse module.'''
+    global _FLAGS
+    if not _FLAGS:
+        _FLAGS = ArgParser()
+    return _FLAGS
+
+def add_mutex_group(*args, **kwargs):
+    return get_flags().add_mutually_exclusive_group(*args, **kwargs)
+
+def add_group(*args, **kwargs):
+    return get_flags().add_argument_group(*args, **kwargs)
+
+def add_arg(*args, **kwargs):
+    return get_flags().add_argument(*args, **kwargs)
