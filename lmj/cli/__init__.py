@@ -21,7 +21,6 @@
 '''Some utilities for command line interfaces !'''
 
 from .log import enable_default_logging, get_logger
-from .flags import ArgParser
 
 import plac
 
@@ -30,9 +29,8 @@ args = plac.annotations
 def call(main):
     '''Enable logging and start up a main method.'''
     enable_default_logging()
-    f = get_flags()
-    if f:
-        main(f.parse_args())
+    if _FLAGS:
+        main(_FLAGS.parse_args())
     else:
         plac.call(main)
 
@@ -43,6 +41,7 @@ def get_flags():
     '''Enable arguments through the Python argparse module.'''
     global _FLAGS
     if not _FLAGS:
+        from .flags import ArgParser
         _FLAGS = ArgParser()
     return _FLAGS
 
