@@ -22,34 +22,38 @@
 
 from .log import enable_default_logging, get_logger
 
-import plac
-
-args = plac.annotations
 
 def call(main):
     '''Enable logging and start up a main method.'''
     enable_default_logging()
-    if _FLAGS:
-        main(_FLAGS.parse_args())
+    if _ARGS:
+        main(_ARGS.parse_args())
     else:
+        import plac
         plac.call(main)
 
 
-_FLAGS = None
+def annotate(*args, **kwargs):
+    '''Return a decorator for plac-style argument annotations.'''
+    import plac
+    return plac.annotations(*args, **kwargs)
 
-def get_flags():
+
+_ARGS = None
+
+def get_args():
     '''Enable arguments through the Python argparse module.'''
-    global _FLAGS
-    if not _FLAGS:
+    global _ARGS
+    if not _ARGS:
         from .flags import ArgParser
-        _FLAGS = ArgParser()
-    return _FLAGS
+        _ARGS = ArgParser()
+    return _ARGS
 
-def add_mutex_group(*args, **kwargs):
-    return get_flags().add_mutually_exclusive_group(*args, **kwargs)
+def add_mutex_arg_group(*args, **kwargs):
+    return get_args().add_mutually_exclusive_group(*args, **kwargs)
 
-def add_group(*args, **kwargs):
-    return get_flags().add_argument_group(*args, **kwargs)
+def add_arg_group(*args, **kwargs):
+    return get_args().add_argument_group(*args, **kwargs)
 
 def add_arg(*args, **kwargs):
-    return get_flags().add_argument(*args, **kwargs)
+    return get_args().add_argument(*args, **kwargs)
