@@ -18,25 +18,28 @@ class TTY_Formatter(logging.Formatter):
         END='\x1b[00m',
         )
 
-    def __init__(self, stream=None):
+    def __init__(self, stream=None, process_names=False):
         '''Construct this formatter.
 
-        Provides colored output if the stream parameter is specified and is an acceptable TTY.
-        We print hardwired escape sequences, which will probably break in some circumstances;
-        for this unfortunate shortcoming, we apologize.
+        Provides colored output if the stream parameter is specified and is an
+        acceptable TTY. We print hardwired escape sequences, which will probably
+        break in some circumstances; for this unfortunate shortcoming, we
+        apologize.
         '''
         colors = {k: '' for k in TTY_Formatter._COLORS}
         if stream and hasattr(stream, 'isatty') and stream.isatty():
             curses.setupterm()
             if curses.tigetnum('colors') > 2:
                 colors = TTY_Formatter._COLORS
-        format = ('%%(levelname).1s '
-                  '%(TIME)s%%(asctime)s%(END)s '
-                  '%(PROC)s%%(processName)s%(END)s '
-                  '%(NAME)s%%(name)s%(END)s:'
-                  '%(LINE)s%%(lineno)d%(END)s '
-                  '%%(message)s' % colors)
-        logging.Formatter.__init__(self, format, TTY_Formatter._DATE_FORMAT)
+        parts = [
+            '%%(levelname).1s ',
+            '%(TIME)s%%(asctime)s%(END)s ',
+            '%(PROC)s%%(processName)s%(END)s ' if process_names else '',
+            '%(NAME)s%%(name)s%(END)s:',
+            '%(LINE)s%%(lineno)d%(END)s ',
+            '%%(message)s',
+            ]
+        logging.Formatter.__init__(self, ''.join(parts) % colors, TTY_Formatter._DATE_FORMAT)
 
 
 def get_logger(name=None, level=None, default_level=logging.INFO):
@@ -62,14 +65,14 @@ def get_logger(name=None, level=None, default_level=logging.INFO):
 
 _default_logging_enabled = False
 
-def enable_default_logging():
+def enable_default_logging(default_level='INFO', process_names=False):
     '''Set up logging in the typical way.'''
     global _default_logging_enabled
     if _default_logging_enabled:
         return
-    get_logger(level='NOTSET')
+    get_logger(level=default_level)
     handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(TTY_Formatter(sys.stdout))
+    handler.setFormatter(TTY_Formatter(sys.stdout, process_names))
     logging.root.addHandler(handler)
     _default_logging_enabled = True
     return handler
