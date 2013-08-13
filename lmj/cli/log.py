@@ -42,7 +42,7 @@ class TTY_Formatter(logging.Formatter):
         logging.Formatter.__init__(self, ''.join(parts) % colors, TTY_Formatter._DATE_FORMAT)
 
 
-def get_logger(name=None, level=None, default_level=logging.INFO):
+def get_logger(name=None, level=None, default_level='INFO'):
     '''Get or create a logger.'''
     logger = logging.getLogger(name) if name else logging.root
 

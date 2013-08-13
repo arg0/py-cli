@@ -22,12 +22,18 @@
 
 from .log import enable_default_logging, get_logger
 
+logging = get_logger('lmj.cli')
 
-def call(main):
+def call(main, default_level='INFO'):
     '''Enable logging and start up a main method.'''
-    enable_default_logging()
+    enable_default_logging(default_level=default_level)
     if _ARGS:
-        main(_ARGS.parse_args())
+        args = _ARGS.parse_args()
+        kwargs = vars(args)
+        logging.debug('running with arguments:')
+        for k in sorted(kwargs):
+            logging.debug('--%s = %s', k, kwargs[k])
+        main(args)
     else:
         import plac
         plac.call(main)
