@@ -46,6 +46,7 @@ def annotate(*args, **kwargs):
 
 
 _ARGS = None
+_CMDS = None
 
 def get_args():
     '''Enable arguments through the Python argparse module.'''
@@ -55,6 +56,14 @@ def get_args():
         _ARGS = ArgParser()
     return _ARGS
 
+def get_commands():
+    '''Enable sub-parsers of command line arguments.'''
+    global _CMDS
+    if not _CMDS:
+        _CMDS = get_args().add_subparsers()
+    return _CMDS
+
+
 def add_mutex_arg_group(*args, **kwargs):
     return get_args().add_mutually_exclusive_group(*args, **kwargs)
 
@@ -63,3 +72,6 @@ def add_arg_group(*args, **kwargs):
 
 def add_arg(*args, **kwargs):
     return get_args().add_argument(*args, **kwargs)
+
+def add_command(*args, **kwargs):
+    return get_commands().add_subparser(*args, **kwargs)
