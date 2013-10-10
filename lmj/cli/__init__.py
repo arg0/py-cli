@@ -74,4 +74,4 @@ def add_arg(*args, **kwargs):
     return get_args().add_argument(*args, **kwargs)
 
 def add_command(*args, **kwargs):
-    return get_commands().add_subparser(*args, **kwargs)
+    return get_commands().add_parser(*args, **kwargs)
