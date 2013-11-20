@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='lmj.cli',
-    version='0.0.3',
+    version='0.0.4',
     namespace_packages=['lmj'],
     packages=setuptools.find_packages(),
     author='Leif Johnson',
