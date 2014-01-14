@@ -58,9 +58,10 @@ Finally, if you prefer using slightly more heavy-weight command line arguments,
 
     g = climate.add_arg_group('Foo')
     g.add_argument('-a', '--alfred', type=int, default=2, help='ALFRED!')
+    g.add_argument('-b', '--betty', type=int, default=3, help='BETTY!')
 
-    def main(foo=1, bar='hello'):
-        logging.info('%s %s', foo, bar)
+    def main(args):
+        logging.info('%s %s', args.alfred, args.betty)
 
     if __name__ == '__main__':
         climate.call(main)
