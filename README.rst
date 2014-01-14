@@ -51,7 +51,7 @@ straight wrapper over ``plac`` functionality)::
 ~~~~~~~~~~~~~~~~~~~~
 
 Finally, if you prefer using slightly more heavy-weight command line arguments,
-``climate`` provides some convenience wrappers for you.
+``climate`` provides some convenience wrappers for you::
 
     import climate
     import logging
