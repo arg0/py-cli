@@ -22,7 +22,7 @@
 
 from .log import enable_default_logging, get_logger
 
-logging = get_logger('lmj.cli')
+logging = get_logger('climate')
 
 def call(main, default_level='INFO'):
     '''Enable logging and start up a main method.'''
