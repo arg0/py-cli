@@ -2,14 +2,13 @@ import os
 import setuptools
 
 setuptools.setup(
-    name='lmj.cli',
-    version='0.0.4',
-    namespace_packages=['lmj'],
-    packages=setuptools.find_packages(),
+    name='climate',
+    version='0.1.0',
+    packages=['climate'],
     author='Leif Johnson',
     author_email='leif@leifjohnson.net',
     description='Command-line utilities',
-    long_description=open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.md')).read(),
+    long_description=open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.rst')).read(),
     license='MIT',
     url='http://github.com/lmjohns3/py-cli/',
     keywords=('command-line '
@@ -18,9 +17,13 @@ setuptools.setup(
               ),
     install_requires=['plac'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
+        'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
+        'Topic :: Utilities',
         ],
     )
