@@ -60,7 +60,7 @@ def get_commands():
     '''Enable sub-parsers of command line arguments.'''
     global _CMDS
     if not _CMDS:
-        _CMDS = get_args().add_subparsers()
+        _CMDS = get_args().add_subparsers(dest='command_name')
     return _CMDS
 
 
