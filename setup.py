@@ -4,7 +4,7 @@ import setuptools
 setuptools.setup(
     name='climate',
     version='0.1.0',
-    packages=['climate'],
+    packages=setuptools.find_packages(),
     author='Leif Johnson',
     author_email='leif@leifjohnson.net',
     description='Command-line utilities',
