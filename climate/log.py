@@ -46,6 +46,15 @@ def get_logger(name=None, level=None, default_level='INFO'):
     '''Get or create a logger.'''
     logger = logging.getLogger(name) if name else logging.root
 
+    # python 3 changed the name of the dictionary that maps level names to level
+    # numbers. this should let us use either name.
+    names = {}
+    for attr in ('_levelNames', '_nameToLevel'):
+        try:
+            names.update(getattr(logging, attr))
+        except AttributeError:
+            pass
+
     # set the default level, if the logger is new
     try:
         clean = logger.is_squeaky_clean
@@ -53,11 +62,11 @@ def get_logger(name=None, level=None, default_level='INFO'):
         pass
     else:
         if clean and default_level is not None:
-            logger.setLevel(logging._levelNames.get(default_level, default_level))
+            logger.setLevel(names.get(default_level, default_level))
 
     # unconditionally set the logger level, if requested
     if level is not None:
-        logger.setLevel(logging._levelNames.get(level, level))
+        logger.setLevel(names.get(level, level))
         logger.is_squeaky_clean = False
 
     return logger
