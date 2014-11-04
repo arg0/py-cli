@@ -18,12 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import argparse
-
 '''Useful utilities for command-line arguments.'''
 
+import argparse
+import plac
 
-class ArgParser(argparse.ArgumentParser):
+
+class Parser(argparse.ArgumentParser):
     '''This class provides some sane default command-line argument behaviors.
 
     In particular, the help formatter includes default values, and arguments can
@@ -40,8 +41,10 @@ class ArgParser(argparse.ArgumentParser):
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     def __init__(self, *args, **kwargs):
-        kwargs.update(ArgParser.SANE_DEFAULTS)
-        super(ArgParser, self).__init__(*args, **kwargs)
+        kw = {}
+        kw.update(Parser.SANE_DEFAULTS)
+        kw.update(kwargs)
+        super(Parser, self).__init__(*args, **kw)
 
     def convert_arg_line_to_args(self, line):
         '''Remove # comments and blank lines from arg files.'''
@@ -62,7 +65,7 @@ def _get_args():
     '''Enable arguments through the Python argparse module.'''
     global _ARGS
     if not _ARGS:
-        _ARGS = ArgParser()
+        _ARGS = Parser()
     return _ARGS
 
 def _get_commands():
