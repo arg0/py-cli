@@ -48,7 +48,7 @@ class Parser(argparse.ArgumentParser):
 
     def convert_arg_line_to_args(self, line):
         '''Remove # comments and blank lines from arg files.'''
-        S = '__@__'
+        S = 'eF5P86904hSOXAn9YLA1JMNXxG8EX7DA'
         line = line.replace(r'\#', S).split('#')[0].strip().replace(S, '#')
         if line:
             if line[0] == '-' and ' ' in line:
