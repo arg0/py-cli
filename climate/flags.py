@@ -53,3 +53,90 @@ class ArgParser(argparse.ArgumentParser):
                     yield p
             else:
                 yield line
+
+
+_ARGS = None
+_CMDS = None
+
+def _get_args():
+    '''Enable arguments through the Python argparse module.'''
+    global _ARGS
+    if not _ARGS:
+        _ARGS = ArgParser()
+    return _ARGS
+
+def _get_commands():
+    '''Enable sub-parsers of command line arguments.'''
+    global _CMDS
+    if not _CMDS:
+        _CMDS = _get_args().add_subparsers(dest='command_name')
+    return _CMDS
+
+# from http://stackoverflow.com/questions/5376837
+def _is_running_in_ipython():
+    '''Return True iff the runtime environment is provided by IPython.'''
+    try:
+        __IPYTHON__
+        return True
+    except NameError:
+        return False
+
+
+def add_mutex_arg_group(*args, **kwargs):
+    '''Add a mutually-exclusive argparse group.
+
+    Returns
+    -------
+    A mutually-exclusive argparse argument group object.
+    '''
+    return _get_args().add_mutually_exclusive_group(*args, **kwargs)
+
+
+def add_arg_group(*args, **kwargs):
+    '''Add an argparse argument group.
+
+    Returns
+    -------
+    An argparse argument group object.
+    '''
+    return _get_args().add_argument_group(*args, **kwargs)
+
+
+def add_arg(*args, **kwargs):
+    '''Add an argparse argument.'''
+    return _get_args().add_argument(*args, **kwargs)
+
+
+def add_command(*args, **kwargs):
+    '''Add an argparse command parser.
+
+    The name of the command will be stored in the "command_name" argparse
+    variable.
+
+    Returns
+    -------
+    An argparse command parser object.
+    '''
+    return _get_commands().add_parser(*args, **kwargs)
+
+
+def parse_args(**overrides):
+    '''Parse command-line arguments, overriding with keyword arguments.
+
+    Returns
+    -------
+    args :
+        The command-line argument namespace object.
+    kwargs :
+        A dictionary version of the command-line arguments.
+    '''
+    args = argparse.Namespace()
+    if not _is_running_in_ipython():
+        args = _get_args().parse_args()
+    for k, v in overrides.items():
+        setattr(args, k, v)
+    return args, vars(args)
+
+def annotate(*args, **kwargs):
+    '''Return a decorator for plac-style argument annotations.'''
+    return plac.annotations(*args, **kwargs)

@@ -18,60 +18,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-'''Some utilities for command line interfaces !'''
+'''Some utilities for command line interfaces!'''
 
 from .log import enable_default_logging, get_logger
+from .flags import parse_args, add_mutex_arg_group, add_arg_group, \
+    add_arg, add_command
 
 logging = get_logger('climate')
 
 def call(main, default_level='INFO'):
     '''Enable logging and start up a main method.'''
     enable_default_logging(default_level=default_level)
-    if _ARGS:
-        args = _ARGS.parse_args()
-        kwargs = vars(args)
-        logging.debug('running with arguments:')
-        for k in sorted(kwargs):
-            logging.debug('--%s = %s', k, kwargs[k])
-        main(args)
-    else:
+    from . import flags
+    if flags._ARGS is None:
         import plac
-        plac.call(main)
-
-
-def annotate(*args, **kwargs):
-    '''Return a decorator for plac-style argument annotations.'''
-    import plac
-    return plac.annotations(*args, **kwargs)
-
-
-_ARGS = None
-_CMDS = None
-
-def get_args():
-    '''Enable arguments through the Python argparse module.'''
-    global _ARGS
-    if not _ARGS:
-        from .flags import ArgParser
-        _ARGS = ArgParser()
-    return _ARGS
-
-def get_commands():
-    '''Enable sub-parsers of command line arguments.'''
-    global _CMDS
-    if not _CMDS:
-        _CMDS = get_args().add_subparsers(dest='command_name')
-    return _CMDS
-
-
-def add_mutex_arg_group(*args, **kwargs):
-    return get_args().add_mutually_exclusive_group(*args, **kwargs)
-
-def add_arg_group(*args, **kwargs):
-    return get_args().add_argument_group(*args, **kwargs)
-
-def add_arg(*args, **kwargs):
-    return get_args().add_argument(*args, **kwargs)
-
-def add_command(*args, **kwargs):
-    return get_commands().add_parser(*args, **kwargs)
+        return plac.call(main)
+    args, kwargs = parse_args()
+    logging.debug('running with arguments:')
+    for k in sorted(kwargs):
+        logging.debug('--%s = %s', k, kwargs[k])
+    return main(args)
