@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='climate',
-    version='0.3.0',
+    version='0.3.1',
     packages=setuptools.find_packages(),
     author='Leif Johnson',
     author_email='leif@leifjohnson.net',
