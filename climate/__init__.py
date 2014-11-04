@@ -22,7 +22,7 @@
 
 from .log import enable_default_logging, get_logger
 from .flags import parse_args, add_mutex_arg_group, add_arg_group, \
-    add_arg, add_command
+    add_arg, add_command, annotate
 
 logging = get_logger('climate')
 
