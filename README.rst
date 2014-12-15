@@ -12,6 +12,8 @@ Install either from this repository, or with pip::
 
     pip install climate
 
+Documentation for the package is at http://pythonhosted.org/climate.
+
 Usage
 -----
 
