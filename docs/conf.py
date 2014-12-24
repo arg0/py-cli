@@ -30,7 +30,6 @@ pygments_style = 'tango'
 
 html_theme = 'readable'
 html_theme_path = [sphinx_readable_theme.get_html_theme_path()]
-html_context = dict(google_analytics_id='UA-57658-10')
 htmlhelp_basename = 'climatedoc'
 
 latex_elements = {
@@ -41,24 +40,9 @@ latex_elements = {
 \usepackage{pgfplots}
 \usetikzlibrary{arrows}''',
 }
-latex_documents = [
-  ('index', 'climate.tex', u'Climate Documentation',
-   u'Leif Johnson', 'manual'),
-]
 
-man_pages = [
-    ('index', 'climate', u'Climate Documentation',
-     [u'Leif Johnson'], 1)
-]
-
-texinfo_documents = [
-  ('index',
-   'climate',
-   u'Climate Documentation',
-   u'Leif Johnson',
-   'climate',
-   'One line description of project.',
-   'Miscellaneous'),
-]
-
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+}
