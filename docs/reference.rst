@@ -11,7 +11,8 @@ Logging
 .. autosummary::
    :toctree: generated/
 
-   climate.log
+   climate.log.enable_default_logging
+   climate.log.get_logger
 
 Arguments
 =========
@@ -19,4 +20,31 @@ Arguments
 .. autosummary::
    :toctree: generated/
 
-   climate.flags
+   climate.flags.Parser
+
+Setup
+-----
+
+.. autosummary::
+   :toctree: generated/
+
+   climate.flags.add_mutex_arg_group
+   climate.flags.add_arg_group
+   climate.flags.add_arg
+   climate.flags.add_command
+
+Parsing
+-------
+
+.. autosummary::
+   :toctree: generated/
+
+   climate.flags.parse_args
+
+Decorators
+----------
+
+.. autosummary::
+   :toctree: generated/
+
+   climate.flags.annotate
