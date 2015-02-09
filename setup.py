@@ -3,10 +3,10 @@ import setuptools
 
 setuptools.setup(
     name='climate',
-    version='0.3.1',
+    version='0.3.2',
     packages=setuptools.find_packages(),
     author='Leif Johnson',
-    author_email='leif@leifjohnson.net',
+    author_email='leif@lmjohns3.com',
     description='Command-line utilities',
     long_description=open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.rst')).read(),
     license='MIT',
