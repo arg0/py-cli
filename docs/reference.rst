@@ -28,8 +28,8 @@ Setup
 .. autosummary::
    :toctree: generated/
 
-   climate.flags.add_mutex_arg_group
-   climate.flags.add_arg_group
+   climate.flags.add_mutex
+   climate.flags.add_group
    climate.flags.add_arg
    climate.flags.add_command
 
@@ -40,6 +40,7 @@ Parsing
    :toctree: generated/
 
    climate.flags.parse_args
+   climate.flags.parse_known_args
 
 Decorators
 ----------
