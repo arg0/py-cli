@@ -1,38 +1,28 @@
-# Copyright (c) 2013 Leif Johnson <leif@leifjohnson.net>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 '''Useful utilities for command-line arguments.'''
 
 import argparse
-import plac
 
+__all__ = [
+    'add_arg',
+    'add_command',
+    'add_group',
+    'add_mutex',
+    'parse_args',
+    'parse_known_args',
+]
 
 class Parser(argparse.ArgumentParser):
     '''This class provides some sane default command-line argument behaviors.
 
     In particular, the help formatter includes default values, and arguments can
-    be loaded from files. Files can contain arguments in two ways: one per line,
-    or many-per-line. For one-per-line arguments, spaces etc. are preserved,
-    while for many-per-line arguments, the line must start with a dash, and
-    multiple arguments are split on whitespace. In all cases, shell-style
-    comments are removed from the file before processing.
+    be loaded from files by using the "@" prefix.
+
+    Files can contain arguments in two ways: one per line, or many-per-line. For
+    one-per-line arguments, spaces etc. are preserved, while for many-per-line
+    arguments, the line must start with a dash, and multiple arguments are split
+    on whitespace. In all cases, shell-style comments are removed from the file
+    before processing; escape "#" characters (e.g., if you're trying to give a
+    hexadecimal color string) using a backslash.
     '''
 
     SANE_DEFAULTS = dict(
@@ -45,6 +35,7 @@ class Parser(argparse.ArgumentParser):
         kw.update(Parser.SANE_DEFAULTS)
         kw.update(kwargs)
         super(Parser, self).__init__(*args, **kw)
+        self._subparsers = self.add_subparsers(dest='command_name')
 
     def convert_arg_line_to_args(self, line):
         '''Remove # comments and blank lines from arg files.'''
@@ -57,57 +48,37 @@ class Parser(argparse.ArgumentParser):
             else:
                 yield line
 
+PARSER = None
 
-_ARGS = None
-_CMDS = None
+def _parser():
+    global PARSER
+    if PARSER is None:
+        PARSER = Parser()
+    return PARSER
 
-def _get_args():
-    '''Enable arguments through the Python argparse module.'''
-    global _ARGS
-    if not _ARGS:
-        _ARGS = Parser()
-    return _ARGS
-
-def _get_commands():
-    '''Enable sub-parsers of command line arguments.'''
-    global _CMDS
-    if not _CMDS:
-        _CMDS = _get_args().add_subparsers(dest='command_name')
-    return _CMDS
-
-# from http://stackoverflow.com/questions/5376837
-def _is_running_in_ipython():
-    '''Return True iff the runtime environment is provided by IPython.'''
-    try:
-        __IPYTHON__
-        return True
-    except NameError:
-        return False
-
-
-def add_mutex_arg_group(*args, **kwargs):
+def add_mutex(*args, **kwargs):
     '''Add a mutually-exclusive argparse group.
 
     Returns
     -------
     A mutually-exclusive argparse argument group object.
     '''
-    return _get_args().add_mutually_exclusive_group(*args, **kwargs)
+    return _parser().add_mutually_exclusive_group(*args, **kwargs)
 
 
-def add_arg_group(*args, **kwargs):
+def add_group(*args, **kwargs):
     '''Add an argparse argument group.
 
     Returns
     -------
     An argparse argument group object.
     '''
-    return _get_args().add_argument_group(*args, **kwargs)
+    return _parser().add_argument_group(*args, **kwargs)
 
 
 def add_arg(*args, **kwargs):
     '''Add an argparse argument.'''
-    return _get_args().add_argument(*args, **kwargs)
+    return _parser().add_argument(*args, **kwargs)
 
 
 def add_command(*args, **kwargs):
@@ -120,7 +91,7 @@ def add_command(*args, **kwargs):
     -------
     An argparse command parser object.
     '''
-    return _get_commands().add_parser(*args, **kwargs)
+    return _parser()._subparsers.add_parser(*args, **kwargs)
 
 
 def parse_args(**overrides):
@@ -128,18 +99,26 @@ def parse_args(**overrides):
 
     Returns
     -------
-    args :
+    args : namespace
         The command-line argument namespace object.
-    kwargs :
-        A dictionary version of the command-line arguments.
     '''
-    args = argparse.Namespace()
-    if not _is_running_in_ipython():
-        args = _get_args().parse_args()
+    args = _parser().parse_args()
     for k, v in overrides.items():
         setattr(args, k, v)
-    return args, vars(args)
+    return args
 
-def annotate(*args, **kwargs):
-    '''Return a decorator for plac-style argument annotations.'''
-    return plac.annotations(*args, **kwargs)
+
+def parse_known_args(**overrides):
+    '''Parse known command-line arguments, overriding with keyword arguments.
+
+    Returns
+    -------
+    args : namespace
+        The command-line argument namespace object.
+    rest : list of strings
+        A list containing unknown command-line arguments.
+    '''
+    args, rest = _parser().parse_known_args()
+    for k, v in overrides.items():
+        setattr(args, k, v)
+    return args, rest
