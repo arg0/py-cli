@@ -58,7 +58,7 @@ Finally, if you prefer using slightly more heavy-weight command line arguments,
     import climate
     import logging
 
-    g = climate.add_arg_group('Foo')
+    g = climate.add_group('Foo')
     g.add_argument('-a', '--alfred', type=int, default=2, help='ALFRED!')
     g.add_argument('-b', '--betty', type=int, default=3, help='BETTY!')
 
