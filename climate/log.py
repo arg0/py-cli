@@ -1,9 +1,16 @@
-'''Snazzy logging utils by Bryan Silverthorn
-(from http://github.com/bsilvert/utcondor).'''
+'''Snazzy logging utils from http://github.com/bsilvert/utcondor.
+
+Most of the code in this module was written by Bryan Silverthorn.
+'''
 
 import curses
 import logging
 import sys
+
+__all__ = [
+    'enable_default_logging',
+    'get_logger',
+]
 
 
 class TTY_Formatter(logging.Formatter):
