@@ -35,7 +35,7 @@ class Parser(argparse.ArgumentParser):
         kw.update(Parser.SANE_DEFAULTS)
         kw.update(kwargs)
         super(Parser, self).__init__(*args, **kw)
-        self._subparsers = self.add_subparsers(dest='command_name')
+        self._subparsers = None
 
     def convert_arg_line_to_args(self, line):
         '''Remove # comments and blank lines from arg files.'''
@@ -91,6 +91,8 @@ def add_command(*args, **kwargs):
     -------
     An argparse command parser object.
     '''
+    if _parser()._subparsers is None:
+        _parser().add_subparsers(dest='command_name')
     return _parser()._subparsers.add_parser(*args, **kwargs)
 
 
