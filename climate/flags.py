@@ -91,9 +91,10 @@ def add_command(*args, **kwargs):
     -------
     An argparse command parser object.
     '''
-    if _parser()._subparsers is None:
-        _parser()._subparsers = _parser().add_subparsers(dest='command_name')
-    return _parser()._subparsers.add_parser(*args, **kwargs)
+    parser = _parser()
+    if parser._subparsers is None:
+        parser._subparsers = parser.add_subparsers(dest='command_name')
+    return parser._subparsers.add_parser(*args, **kwargs)
 
 
 def parse_args(**overrides):
