@@ -81,14 +81,26 @@ def get_logger(name=None, level=None, default_level='INFO'):
 
 _default_logging_enabled = False
 
-def enable_default_logging(default_level='INFO', process_names=False):
-    '''Set up logging in the typical way.'''
+def enable_default_logging(default_level='INFO',
+                           stream=sys.stdout,
+                           process_names=False):
+    '''Set up logging in the typical way.
+
+    Parameters
+    ----------
+    default_level : str, optional
+        Logging level. Defaults to INFO.
+    stream : file-like, optional
+        Stream for logging output. Defaults to ``sys.stdout``.
+    process_names : bool, optional
+        If True, include process names in logging output. Defaults to False.
+    '''
     global _default_logging_enabled
     if _default_logging_enabled:
         return
     get_logger(level=default_level)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(TTY_Formatter(sys.stdout, process_names))
+    handler = logging.StreamHandler(stream)
+    handler.setFormatter(TTY_Formatter(stream, process_names))
     logging.root.addHandler(handler)
     _default_logging_enabled = True
     return handler

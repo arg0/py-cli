@@ -4,6 +4,7 @@ from .log import *
 from .flags import *
 
 import plac
+import sys
 
 logging = get_logger(__name__)
 
@@ -13,9 +14,24 @@ def annotate(*args, **kwargs):
     return plac.annotations(*args, **kwargs)
 
 
-def call(main, default_level='INFO'):
-    '''Enable logging and start up a main method.'''
-    enable_default_logging(default_level=default_level)
+def call(main, default_level='INFO', stream=sys.stdout, process_names=False):
+    '''Enable logging and start up a main method.
+
+    Parameters
+    ----------
+    main : callable
+        The main method to invoke after initialization.
+    default_level : str, optional
+        Logging level. Defaults to INFO.
+    stream : file-like, optional
+        Stream for logging output. Defaults to ``sys.stdout``.
+    process_names : bool, optional
+        If True, include process names in logging output. Defaults to False.
+    '''
+    enable_default_logging(
+        default_level=default_level,
+        stream=stream,
+        process_names=process_names)
     from . import flags
     if flags.PARSER is None:
         return plac.call(main)
