@@ -8,6 +8,8 @@ import sys
 
 logging = get_logger(__name__)
 
+__version__ = '0.4.4'
+
 
 def annotate(*args, **kwargs):
     '''Return a decorator for plac-style argument annotations.'''
