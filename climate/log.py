@@ -3,7 +3,12 @@
 Most of the code in this module was written by Bryan Silverthorn.
 '''
 
-import curses
+curses = None
+try:
+    import curses
+except ImportError:
+    pass
+
 import logging
 import sys
 
@@ -34,7 +39,7 @@ class TTY_Formatter(logging.Formatter):
         apologize.
         '''
         colors = {k: '' for k in TTY_Formatter._COLORS}
-        if stream and hasattr(stream, 'isatty') and stream.isatty():
+        if stream and hasattr(stream, 'isatty') and stream.isatty() and curses:
             curses.setupterm()
             if curses.tigetnum('colors') > 2:
                 colors = TTY_Formatter._COLORS
