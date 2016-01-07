@@ -42,6 +42,15 @@ Parsing
    climate.flags.parse_args
    climate.flags.parse_known_args
 
+Help
+----
+
+.. autosummary::
+   :toctree: generated/
+
+   climate.flags.print_help
+   climate.flags.print_usage
+
 Decorators
 ----------
 
