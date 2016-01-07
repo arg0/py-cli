@@ -9,6 +9,8 @@ __all__ = [
     'add_mutex',
     'parse_args',
     'parse_known_args',
+    'print_usage',
+    'print_help',
 ]
 
 class Parser(argparse.ArgumentParser):
@@ -125,3 +127,19 @@ def parse_known_args(**overrides):
     for k, v in overrides.items():
         setattr(args, k, v)
     return args, rest
+
+
+def print_usage(*args, **kwargs):
+    '''Print usage information for the currently defined parser.
+
+    All positional and keyword arguments are passed to the underlying parser.
+    '''
+    _parser().print_usage(*args, **kwargs)
+
+
+def print_help(*args, **kwargs):
+    '''Print help information for the currently defined parser.
+
+    All positional and keyword arguments are passed to the underlying parser.
+    '''
+    _parser().print_help(*args, **kwargs)
